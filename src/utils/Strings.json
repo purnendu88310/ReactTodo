@@ -1,0 +1,12 @@
+{
+    "header":"Todo List 2024",
+  "pivots":{
+    "taskTab":"Tasks",
+    "taskForm":"Task Form",
+    "completedTaskTab":"Completed"
+
+  },
+  "taskDeleteConfirmation":"Are your sure you want to delete this task?",
+  "taskAdd":"Add Task",
+  "taskUpdate":"Update Task"
+}
