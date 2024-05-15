@@ -1,7 +1,7 @@
 import React, { FC, createContext, useState } from 'react';
 import HomeStyle from './home.style';
 import TodoString from '../../utils/Strings.json'
-import { Pivot, PivotItem, Stack, initializeIcons } from '@fluentui/react';
+import { Pivot, PivotItem, PrimaryButton, Stack, initializeIcons } from '@fluentui/react';
 import { PivotKeyEnum } from '../../utils/Types';
 import ListTodo from '../list-todo/list-todo';
 import ITask from '../../utils/task';
@@ -19,15 +19,26 @@ const [selectedKey,setSelectedKey] = useState<string>(PivotKeyEnum.Tasks)
 const [editTaskId,setEditTaskId] = useState<any | null>(null)
 
 const editTask = (id:any)=>{
-  setEditTaskId(id)
-  setSelectedKey(PivotKeyEnum.TaskForm)
+  if(id=='list'){
+    setEditTaskId("")
+    setSelectedKey(PivotKeyEnum.Tasks)
+  }else{
+    setEditTaskId(id)
+    setSelectedKey(PivotKeyEnum.TaskForm)
+  }
+  
+}
+const changeTab = (tab:any)=>{
+  setSelectedKey(tab)
+  
+  
 }
  return( <Stack className={HomeStyle.todoContainer} data-testid="Home">
    <TodoProvider>
    <header className={HomeStyle.headerStyle}>
       <h2>{TodoString.header}</h2>
     </header>
-    <Stack className={HomeStyle.mt20}>
+    <Stack  className={HomeStyle.mt20}>
     <Pivot 
     selectedKey={String(selectedKey)}
     styles={{root:HomeStyle.pivotRoot}}
@@ -42,7 +53,7 @@ const editTask = (id:any)=>{
 
  </PivotItem>
  <PivotItem headerText={PivotKeyEnum.TaskForm} itemKey={PivotKeyEnum.TaskForm}>
-    <AddEditTodo editTaskId={editTaskId}></AddEditTodo>
+    <AddEditTodo editTaskId={editTaskId} changeTab={changeTab}></AddEditTodo>
 
  </PivotItem>
  <PivotItem headerText={PivotKeyEnum.Completed} itemKey={PivotKeyEnum.Completed}>
@@ -52,6 +63,7 @@ const editTask = (id:any)=>{
  </PivotItem>
 
     </Pivot>
+
     </Stack>
     </TodoProvider>
 

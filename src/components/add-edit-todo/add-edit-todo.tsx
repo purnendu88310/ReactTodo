@@ -1,17 +1,19 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import styles from './add-edit-todo.module.css';
-import { MessageBar, MessageBarType, PrimaryButton, Stack, TextField } from '@fluentui/react';
+import { MessageBar, MessageBarType, PivotItem, PrimaryButton, Stack, TextField } from '@fluentui/react';
 import { TodoContext } from '../todo-provider/todo-provider';
 import ITask from '../../utils/task';
-import { ActionTypeEnum } from '../../utils/Types';
+import { ActionTypeEnum, PivotKeyEnum } from '../../utils/Types';
 import TodoString from '../../utils/Strings.json'
 
 type Props = {
-  editTaskId: any
+  editTaskId: any,
+  changeTab :(tab:any)=>void
+
 
 }
 
-const AddEditTodo = ({ editTaskId }: Props) => {
+const AddEditTodo = ({ editTaskId,changeTab }: Props) => {
   const { activeTasks, dispatch } = useContext(TodoContext)
   useEffect(() => {
     if (editTaskId) {
@@ -45,6 +47,11 @@ const AddEditTodo = ({ editTaskId }: Props) => {
     setShowMessage({ type: MessageBarType.success, message: "Task Added" })
     setTitle("");
     setDescription("");
+    setTimeout(() => {
+      changeTab(PivotKeyEnum.Tasks)
+
+     }, 1000);
+
   }
   const updateTaskAction = () => {
     const taskData = activeTasks.find(task => task.id === editTaskId)
@@ -58,6 +65,10 @@ const AddEditTodo = ({ editTaskId }: Props) => {
      };
      dispatch({type:ActionTypeEnum.Edit,data})
      setShowMessage({ type: MessageBarType.success, message: "Task Updated" })
+     setTimeout(() => {
+      changeTab(PivotKeyEnum.Tasks)
+
+     }, 1000);
 
     }else{
       setShowMessage({ type: MessageBarType.error, message: "Error While Updating Task" })

@@ -1,11 +1,12 @@
-import React, { FC, createContext, useReducer } from 'react';
-import styles from './add-edit-todo.module.css';
+import React, { FC, createContext, useEffect, useReducer, useState } from 'react';
 import ITask from '../../utils/task';
 import { ITodoContext } from '../../utils/todo-context';
 import { ITodoState } from '../../utils/todo-state';
 import { ActionTypeEnum } from '../../utils/Types';
-import { IAddAction, IReducerAction } from '../../utils/action-task';
+import { IReducerAction } from '../../utils/action-task';
 import { clone } from '../../utils/utility';
+import { handleSubmit } from '../../firebase/todo-firebase';
+import { getActiveTaskList, getCompletedTaskList, saveActiveTaskList, saveCompletedTaskList } from '../../utils/storage.service';
 
 interface TodoProviderProps { }
 export const TodoContext = createContext<ITodoContext>({ activeTasks: [],
@@ -14,6 +15,7 @@ export const TodoContext = createContext<ITodoContext>({ activeTasks: [],
 type Props = {
     children: React.ReactNode
 }
+
 const addTaskAction = (state: ITodoState, action: IReducerAction)=>{
 
 }
@@ -45,19 +47,34 @@ const completedTaskAction=(state: ITodoState, action: IReducerAction)=>{
 }
 const reducer = (state: ITodoState, action: IReducerAction) => {
     switch (action.type) {
-        case ActionTypeEnum.Add: 
+      
+                     case ActionTypeEnum.Add: 
         const { data } = action;
         data.id = new Date().toJSON();
-        
+       // handleSubmit(data);
+        const finalList = [action.data, ...state.activeTasks]
+        saveActiveTaskList(finalList)
+
         return { ...state, activeTasks: [action.data, ...state.activeTasks] }
         
         case ActionTypeEnum.Delete:
             const activeTasks:ITask[] = JSON.parse(JSON.stringify(state.activeTasks))
            const filteredTask = activeTasks.filter((task)=>task.id!== action.data.id)
+           saveActiveTaskList(filteredTask)
+
             return { ...state,activeTasks:filteredTask}
+            case ActionTypeEnum.DeleteCom:
+                const activeCompletedTasks:ITask[] = JSON.parse(JSON.stringify(state.completedTasks))
+                const filteredCompletedTask = activeCompletedTasks.filter((task)=>task.id!== action.data.id)
+                saveCompletedTaskList(filteredCompletedTask)
+     
+                 return { ...state,completedTasks:filteredCompletedTask}  
             case ActionTypeEnum.Complete:
                 
                   const dataAll = completedTaskAction(state,action)
+                  saveActiveTaskList(dataAll.filteredData)
+                  saveCompletedTaskList(dataAll.completedTask)
+          
                     return {...state,
                         activeTasks:dataAll.filteredData,
                         completedTasks:dataAll.completedTask}
@@ -67,27 +84,23 @@ const reducer = (state: ITodoState, action: IReducerAction) => {
                 if(index>=0){
                     cloneActiveTasksList[index] = action.data
                   }
+                  saveActiveTaskList(cloneActiveTasksList)
+
                   return { ...state,activeTasks:cloneActiveTasksList}
+                  
+              
 
     }
 
     return { ...state }
 }
+ 
 const TodoProvider = (props: Props) => {
-    const tasks: ITask[] = [{
-        id: 1,
-        title: "Task 1",
-        description: "Task 1 Description",
-        status: true
-    },
-    {
-        id: 2,
-        title: "Task 2",
-        description: "Task 2 Description",
-        status: false
-    }]
-    const data:ITodoState = { activeTasks: tasks,completedTasks:[] };
+     const tasks: ITask[] = getActiveTaskList();
+     const completedTasks:ITask[] = getCompletedTaskList();
+    const data:ITodoState = { activeTasks: tasks,completedTasks:completedTasks };
     const [state, dispatch] = useReducer(reducer, data);
+    
     return (
         <TodoContext.Provider value={{ activeTasks: state.activeTasks,completedTasks:state.completedTasks, dispatch }}>
             {props.children}

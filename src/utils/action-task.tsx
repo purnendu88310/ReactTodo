@@ -1,6 +1,6 @@
 import { ActionTypeEnum } from "./Types";
 import ITask from "./task";
-export type IReducerAction = IAddAction|IDeleteAction|IToggleStatus|ITaskUpdateAction
+export type IReducerAction = IAddAction|IDeleteAction|IToggleStatus|ITaskUpdateAction|IDeleteCompleteAction
 
 export interface IAddAction{
     type:ActionTypeEnum.Add,
@@ -17,4 +17,8 @@ export interface IToggleStatus{
 export interface ITaskUpdateAction{
     type:ActionTypeEnum.Edit,
     data:ITask
+}
+export interface IDeleteCompleteAction{
+    type:ActionTypeEnum.DeleteCom,
+    data:{id:any}
 }

@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react';
 import TaskListStyle from './list-todo.style';
 import ITask from '../../utils/task';
-import { Checkbox, FontIcon, MessageBar, Stack, mergeStyles } from '@fluentui/react';
+import { Checkbox, FontIcon, MessageBar, PrimaryButton, Stack, mergeStyles } from '@fluentui/react';
 import { TodoContext } from '../todo-provider/todo-provider';
 import { ActionTypeEnum } from '../../utils/Types';
 import TodoString from '../../utils/Strings.json'
@@ -24,6 +24,10 @@ const ListTodo = ({setEditTask}:Props) => {
 
   const onTaskCompleteToggle = (id: any) => {
     dispatch({ type: ActionTypeEnum.Complete, data: { id } })
+
+  }
+  const onAddNewTask=()=>{
+    setEditTask("");
 
   }
 
@@ -52,7 +56,14 @@ const ListTodo = ({setEditTask}:Props) => {
     <Stack  >
       
       {activeTasks.length?activeTasks.map(onRenderCell):
-      <MessageBar>No Records to Show.</MessageBar>
+     
+     <div className={TaskListStyle.todoContainer}
+     
+     >
+   <MessageBar>No Records to Show.</MessageBar>
+   <PrimaryButton  text={TodoString.taskAdd} style={{margin: 20}} onClick={() => onAddNewTask()}></PrimaryButton>
+
+      </div>
       
       
       }

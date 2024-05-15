@@ -10,5 +10,7 @@ export enum ActionTypeEnum{
     Add,
     Delete,
     Edit,
-    Complete
+    Complete,
+    DeleteCom
+
 }

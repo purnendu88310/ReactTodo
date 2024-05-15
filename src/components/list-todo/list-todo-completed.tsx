@@ -13,7 +13,7 @@ const ListCompletedTodo = () => {
 
   const onTaskDelete = (id: any) => {
     if (window.confirm(TodoString.taskDeleteConfirmation)) {
-      dispatch({ type: ActionTypeEnum.Delete, data: { id } })
+      dispatch({ type: ActionTypeEnum.DeleteCom, data: { id } })
 
     }
 
@@ -45,7 +45,7 @@ const ListCompletedTodo = () => {
     <Stack  >
       
       {completedTasks.length?completedTasks.map(onRenderCell):
-      <MessageBar>No Records to Show.</MessageBar>
+      <MessageBar>No completed task yet.</MessageBar>
       
       
       

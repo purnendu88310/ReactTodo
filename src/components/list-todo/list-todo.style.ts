@@ -4,7 +4,8 @@ import { IProcessedStyleSet, IStyle, mergeStyleSets } from "@fluentui/react";
 interface ITaskListStyle{
     taskItem:IStyle,
     iconStyle:IStyle,
-    disabled:IStyle
+    disabled:IStyle,
+    todoContainer:IStyle
 }
 
 
@@ -36,6 +37,12 @@ const TaskListStyle:IProcessedStyleSet<ITaskListStyle> = mergeStyleSets({
         "&:hover":{cursor:"default"}
        }
     } 
+    ,
+    todoContainer :{
+        position:"absolute",
+        top:"50%",
+        left:"40%",
+    }
 
 })
 export default TaskListStyle;
